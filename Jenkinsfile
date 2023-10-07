@@ -39,5 +39,13 @@ pipeline {
                 }
             }
         }
+        stage('Docker Image Push') {
+            steps {
+                withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerPassword')]) {
+                    sh "docker login -u aadeleke12 -p ${dockerPassword}"
+                    sh 'docker push aadeleke12/myweb:0.0.2'
+                }
+            }
+        }
     }
 }
