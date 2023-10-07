@@ -4,7 +4,7 @@ pipeline {
         stage('SonarQube Analysis') {
             agent {
                 docker {
-                    image 'maven'
+                    image 'maven:3.8.4'
                 }
             }
             steps {
