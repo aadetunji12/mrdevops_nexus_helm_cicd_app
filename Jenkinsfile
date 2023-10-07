@@ -5,6 +5,7 @@ pipeline {
             agent {
                 docker {
                     image 'maven:3.8.4'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock' // Add Docker socket volume for Docker-in-Docker
                 }
             }
             steps {
@@ -20,9 +21,15 @@ pipeline {
                 }
             }
         }
-        stage('quality gate status'){
-            steps{
-                scripts{
-                   waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
+        stage('Quality Gate Status') {
+            steps {
+                script {
+                    def qg = waitForQualityGate abortPipeline: false
+                    if (qg.status != 'OK') {
+                        error("Quality Gate did not pass: ${qg.status}")
+                    }
+                }
+            }
+        }
     }
 }
