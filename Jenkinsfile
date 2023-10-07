@@ -31,5 +31,13 @@ pipeline {
                 }
             }
         }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Use the correct path to your Dockerfile
+                    sh 'docker build -t aadeleke12/myweb:0.0.2 .'
+                }
+            }
+        }
     }
 }
