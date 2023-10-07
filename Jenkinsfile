@@ -14,8 +14,7 @@ pipeline {
                         sh '''
                             mvn clean package sonar:sonar \
                             -Dsonar.sources=src/main \
-                            -Dsonar.host.url=http://your-sonarqube-server:9000 \
-                            -Dsonar.login=$SONAR_TOKEN
+                            -Dsonar.host.url=http://100.26.131.174:9000
                         '''
                     }
                 }
