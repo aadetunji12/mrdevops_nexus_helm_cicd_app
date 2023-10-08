@@ -57,7 +57,7 @@ pipeline {
         stage('Nexus Image Push') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'nexusCredentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                    sh "docker login -u ${admin} -p ${alexandria1A!} http://54.160.104.186:8083"
+                    sh "docker login -u 'admin' -p '${NEXUS_PASSWORD}' http://54.160.104.186:8083"
                     sh "docker tag ${DOCKER_IMAGE}:${DOCKER_VERSION} ${NEXUS_REPOSITORY}:${NEXUS_VERSION}"
                     sh "docker push ${NEXUS_REPOSITORY}:${NEXUS_VERSION}"
                 }
