@@ -47,5 +47,12 @@ pipeline {
                 }
             }
         }
+        stage('Nexus Image Push'){
+   sh "docker login -u admin -p alexandria1A! http://54.160.104.186:8083"
+   sh "docker tag aadeleke12/myweb:0.0.2 54.160.104.186:8081/adeleke12:1.0.0"
+   sh 'docker push 54.160.104.186:8081/adeleke12:1.0.0'
+   }
     }
+}
+}
 }
