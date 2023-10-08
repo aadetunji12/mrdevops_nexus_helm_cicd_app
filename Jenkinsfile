@@ -1,5 +1,12 @@
 pipeline {
     agent any
+    environment {
+        // Define your image and version/tag
+        DOCKER_IMAGE = 'aadeleke12/myweb'
+        DOCKER_VERSION = '0.0.2'
+        NEXUS_REPOSITORY = '54.160.104.186:8081/adeleke12'
+        NEXUS_VERSION = '1.0.0'
+    }
     stages {
         stage('SonarQube Analysis') {
             agent {
@@ -35,7 +42,7 @@ pipeline {
             steps {
                 script {
                     // Use the correct path to your Dockerfile
-                    sh 'docker build -t aadeleke12/myweb:0.0.2 .'
+                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_VERSION} ."
                 }
             }
         }
@@ -43,16 +50,18 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerPassword')]) {
                     sh "docker login -u aadeleke12 -p ${dockerPassword}"
-                    sh 'docker push aadeleke12/myweb:0.0.2'
+                    sh "docker push ${DOCKER_IMAGE}:${DOCKER_VERSION}"
                 }
             }
         }
-        stage('Nexus Image Push'){
-   sh "docker login -u admin -p alexandria1A! http://54.160.104.186:8083"
-   sh "docker tag aadeleke12/myweb:0.0.2 54.160.104.186:8081/adeleke12:1.0.0"
-   sh 'docker push 54.160.104.186:8081/adeleke12:1.0.0'
-   }
+        stage('Nexus Image Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'nexusCredentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                    sh "docker login -u ${admin} -p ${alexandria1A!} http://54.160.104.186:8083"
+                    sh "docker tag ${DOCKER_IMAGE}:${DOCKER_VERSION} ${NEXUS_REPOSITORY}:${NEXUS_VERSION}"
+                    sh "docker push ${NEXUS_REPOSITORY}:${NEXUS_VERSION}"
+                }
+            }
+        }
     }
-}
-}
 }
