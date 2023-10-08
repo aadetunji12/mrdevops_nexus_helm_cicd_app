@@ -55,11 +55,11 @@ pipeline {
             }
         }
         stage('Nexus Image Push') {
-            s stage('Nexus Image Push'){
-   sh "docker login -u admin -p alexandria1A! 54.160.104.186:8083"
-   sh "docker tag aadeleke12/myweb:0.0.2 54.160.104.186:8083/ade:1.0.0"
-   sh 'docker push 54.160.104.186:8083/ade:1.0.0'
-   }
+            steps {
+                script {
+                    sh "docker login -u admin -p alexandria1A! 54.160.104.186:8083"
+                    sh "docker tag ${DOCKER_IMAGE}:${DOCKER_VERSION} ${NEXUS_REPOSITORY}:${NEXUS_VERSION}"
+                    sh "docker push ${NEXUS_REPOSITORY}:${NEXUS_VERSION}"
                 }
             }
         }
